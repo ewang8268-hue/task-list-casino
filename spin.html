@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jackpot Chores | Spin Lounge</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body data-page="spin">
+    <div class="site-lights" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="casino-backdrop" aria-hidden="true">
+      <div class="backdrop-wheel"></div>
+      <div class="backdrop-machine left"></div>
+      <div class="backdrop-machine right"></div>
+      <div class="backdrop-slot slot-one"></div>
+      <div class="backdrop-slot slot-two"></div>
+      <div class="backdrop-slot slot-three"></div>
+      <div class="backdrop-cardtable table-one"></div>
+      <div class="backdrop-cardtable table-two"></div>
+      <div class="backdrop-craps"></div>
+      <div class="backdrop-blackjack"></div>
+      <div class="backdrop-pokerchips"></div>
+      <div class="backdrop-person person-one"></div>
+      <div class="backdrop-person person-two"></div>
+      <div class="backdrop-person person-three"></div>
+      <div class="backdrop-sign"></div>
+      <div class="casino-floor"></div>
+      <div class="backdrop-cards"></div>
+      <div class="backdrop-coins"></div>
+    </div>
+
+    <main class="page-shell">
+      <header class="site-header">
+        <div>
+          <p class="eyebrow">Casino Productivity Club</p>
+          <h1>Jackpot Chores</h1>
+        </div>
+        <nav class="top-nav" aria-label="Primary">
+          <a class="nav-link active" href="./spin.html">Spin Lounge</a>
+          <a class="nav-link" href="./spending.html">Prize Vault</a>
+          <a class="nav-link" href="./index.html">Tasks</a>
+        </nav>
+      </header>
+
+      <section class="hero-banner hero-spin">
+        <div>
+          <p class="eyebrow">Reward Vault</p>
+          <h2>Pull the shiny reels and turn completed chores into loud, glittery wins.</h2>
+        </div>
+        <div class="hero-stats" id="sharedStats"></div>
+      </section>
+
+      <section class="page-grid spin-layout">
+        <section class="panel feature-panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Lucky Reels</p>
+              <h3>Spin Lounge</h3>
+            </div>
+            <button id="spinButton" class="hero-button" type="button">Spin 1 Credit</button>
+          </div>
+
+          <div class="slot-machine">
+            <div class="machine-marquee">
+              <span>Neon Reward Reels</span>
+              <span id="spinBankInline">0 spins ready</span>
+            </div>
+            <div class="reel-row" id="reelRow">
+              <div class="reel" id="reel1"></div>
+              <div class="reel" id="reel2"></div>
+              <div class="reel" id="reel3"></div>
+            </div>
+            <div class="machine-footer">
+              <p id="slotMessage">Knock out a task on the Tasks page to earn spins.</p>
+              <div class="payout-strip">
+                <span class="payout-card">
+                  <span class="payout-icons">
+                    <span class="mini-token seven">7</span>
+                    <span class="mini-token seven">7</span>
+                    <span class="mini-token seven">7</span>
+                  </span>
+                  <span class="payout-value">180</span>
+                </span>
+                <span class="payout-card">
+                  <span class="payout-icons">
+                    <img class="mini-icon" src="./assets/cherries.svg" alt="Cherries" />
+                    <img class="mini-icon" src="./assets/cherries.svg" alt="Cherries" />
+                    <img class="mini-icon" src="./assets/cherries.svg" alt="Cherries" />
+                  </span>
+                  <span class="payout-value">100</span>
+                </span>
+                <span class="payout-card">
+                  <span class="payout-icons">
+                    <img class="mini-icon" src="./assets/diamond.svg" alt="Diamond" />
+                    <img class="mini-icon" src="./assets/diamond.svg" alt="Diamond" />
+                    <span class="mini-token bar">BAR</span>
+                  </span>
+                  <span class="payout-value">45</span>
+                </span>
+                <span class="payout-card">
+                  <span class="payout-icons">
+                    <span class="mini-token seven">7</span>
+                    <span class="mini-token star">★</span>
+                    <span class="mini-token cash">$</span>
+                  </span>
+                  <span class="payout-value">25</span>
+                </span>
+              </div>
+              <div class="all-outcomes-panel">
+                <div class="all-outcomes-header">
+                  <h3>Grouped Outcomes</h3>
+                  <span id="outcomeCount">0 groups</span>
+                </div>
+                <div id="allOutcomesList" class="all-outcomes-list" aria-live="polite"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="panel side-panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Spend Route</p>
+              <h3>What Your Coins Can Unlock</h3>
+            </div>
+          </div>
+          <p id="rewardSuggestion" class="support-copy"></p>
+          <a class="page-jump" href="./spending.html">Go To Prize Vault</a>
+        </aside>
+      </section>
+    </main>
+
+    <template id="outcomeItemTemplate">
+      <div class="outcome-item">
+        <div class="outcome-copy">
+          <div class="outcome-icons"></div>
+          <span class="outcome-note"></span>
+        </div>
+        <div class="outcome-meta">
+          <span class="outcome-ways"></span>
+          <span class="outcome-coins"></span>
+        </div>
+      </div>
+    </template>
+
+    <script src="./app.js"></script>
+    <script src="./spin.js"></script>
+  </body>
+</html>

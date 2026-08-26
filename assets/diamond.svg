@@ -1,0 +1,22 @@
+<svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="diamondMain" x1="80" y1="22" x2="80" y2="138" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D6FCFF"/>
+      <stop offset="0.38" stop-color="#7BE6FF"/>
+      <stop offset="0.72" stop-color="#2D94FF"/>
+      <stop offset="1" stop-color="#0C3FBC"/>
+    </linearGradient>
+    <linearGradient id="diamondEdge" x1="38" y1="54" x2="122" y2="54" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EFFFFF"/>
+      <stop offset="1" stop-color="#78F2FF"/>
+    </linearGradient>
+  </defs>
+  <path d="M56 30H104L126 56L80 132L34 56L56 30Z" fill="url(#diamondMain)"/>
+  <path d="M56 30L80 56L104 30" stroke="url(#diamondEdge)" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M34 56H126" stroke="url(#diamondEdge)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M56 30L34 56L80 132L126 56L104 30" stroke="#F3FFFF" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M80 56L80 132" stroke="#D2FFFF" stroke-width="4" stroke-linecap="round"/>
+  <path d="M80 56L34 56" stroke="#D2FFFF" stroke-width="4" stroke-linecap="round"/>
+  <path d="M80 56L126 56" stroke="#D2FFFF" stroke-width="4" stroke-linecap="round"/>
+  <path d="M56 30L80 132L104 30" stroke="#BDF6FF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
