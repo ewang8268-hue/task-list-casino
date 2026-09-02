@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jackpot Chores | Prize Vault</title>
+    <link rel="stylesheet" href="./styles.css?v=20260901" />
+  </head>
+  <body data-page="spending">
+    <div class="site-lights" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="casino-backdrop" aria-hidden="true">
+      <div class="backdrop-wheel"></div>
+      <div class="backdrop-machine left"></div>
+      <div class="backdrop-machine right"></div>
+      <div class="backdrop-slot slot-one"></div>
+      <div class="backdrop-slot slot-two"></div>
+      <div class="backdrop-slot slot-three"></div>
+      <div class="backdrop-cardtable table-one"></div>
+      <div class="backdrop-cardtable table-two"></div>
+      <div class="backdrop-craps"></div>
+      <div class="backdrop-blackjack"></div>
+      <div class="backdrop-pokerchips"></div>
+      <div class="backdrop-person person-one"></div>
+      <div class="backdrop-person person-two"></div>
+      <div class="backdrop-person person-three"></div>
+      <div class="backdrop-sign"></div>
+      <div class="casino-floor"></div>
+      <div class="backdrop-cards"></div>
+      <div class="backdrop-coins"></div>
+    </div>
+
+    <main class="page-shell">
+      <header class="site-header">
+        <div>
+          <p class="eyebrow">Casino Productivity Club</p>
+          <h1>Jackpot Chores</h1>
+        </div>
+        <nav class="top-nav" aria-label="Primary">
+          <a class="nav-link" href="./spin.html">Spin Lounge</a>
+          <a class="nav-link active" href="./spending.html">Prize Vault</a>
+          <a class="nav-link" href="./index.html">Tasks</a>
+        </nav>
+      </header>
+
+      <section class="hero-banner hero-spending">
+        <div>
+          <p class="eyebrow">Prize Counter</p>
+          <h2>Track the real-life treats you want and decide when your coin stack is enough.</h2>
+        </div>
+        <div class="hero-stats" id="sharedStats"></div>
+      </section>
+
+      <section class="page-grid single-focus">
+        <section class="panel feature-panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Wishlist Vault</p>
+              <h3>Spending Page</h3>
+            </div>
+            <span class="panel-badge">Log rewards, not purchases</span>
+          </div>
+
+          <article class="budget-checkin-card">
+            <div class="budget-checkin-copy">
+              <span class="stat-label">Daily Check-In</span>
+              <strong id="budgetCheckInHeadline">Tap in for today’s budget review</strong>
+              <p id="budgetCheckInDetail">
+                One tap confirms today’s budget review and keeps your money streak moving.
+              </p>
+            </div>
+            <div class="budget-checkin-stats">
+              <article class="budget-chip">
+                <span class="stat-label">Current Streak</span>
+                <strong id="budgetStreakCount">0</strong>
+              </article>
+              <article class="budget-chip">
+                <span class="stat-label">Next Check-In</span>
+                <strong id="nextBudgetCheckIn">Tomorrow</strong>
+              </article>
+            </div>
+            <button id="budgetCheckInButton" class="cash-button budget-checkin-button" type="button">
+              Confirm Today’s Review
+            </button>
+          </article>
+
+          <form id="wishlistForm" class="stack-form stack-form-wide">
+            <input
+              id="wishlistName"
+              name="wishlistName"
+              type="text"
+              maxlength="80"
+              placeholder="What do you want to save up for?"
+              autocomplete="off"
+              required
+            />
+            <input
+              id="wishlistValue"
+              name="wishlistValue"
+              type="number"
+              min="1"
+              max="5000"
+              step="1"
+              placeholder="Coin value"
+              required
+            />
+            <button type="submit">Add Prize</button>
+          </form>
+
+          <article class="highlight-card">
+            <span class="stat-label">Closest Reward</span>
+            <strong id="wishlistHighlightTitle">No wishlist items yet</strong>
+            <p id="wishlistHighlightCopy">
+              Add something you want, give it a coin value, and this page will
+              track when your winnings can cover it.
+            </p>
+          </article>
+
+          <ul id="wishlistList" class="card-list" aria-live="polite"></ul>
+        </section>
+      </section>
+    </main>
+
+    <div id="claimModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="claimTitle">
+      <div class="modal-card">
+        <p class="panel-kicker">Wishlist Reward</p>
+        <h2 id="claimTitle">Claim this reward?</h2>
+        <p id="claimCopy">
+          You have enough coins for this reward. This app will not buy it for
+          you, but it can log the reward and spend the pretend coins if you
+          decide to treat yourself in real life.
+        </p>
+        <div class="modal-actions">
+          <button id="confirmClaimButton" class="primary-action" type="button">Spend Coins</button>
+          <button id="cancelClaimButton" class="secondary-action" type="button">Keep Saving</button>
+        </div>
+      </div>
+    </div>
+
+    <template id="wishlistItemTemplate">
+      <li class="card-item">
+        <div class="card-copy">
+          <span class="card-title"></span>
+          <span class="card-subtitle"></span>
+        </div>
+        <div class="card-actions">
+          <button class="wishlist-status" type="button"></button>
+          <button class="delete-button delete-wishlist" type="button" aria-label="Delete wishlist item">X</button>
+        </div>
+      </li>
+    </template>
+
+    <script src="./app.js?v=20260901"></script>
+    <script src="./spending.js?v=20260901"></script>
+  </body>
+</html>
