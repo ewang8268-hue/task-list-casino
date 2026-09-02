@@ -17,6 +17,26 @@
     { threshold: 80, text: "80 coins: Mini reward unlocked. Consider a snack, break, or tiny treat you've wanted." },
     { threshold: 0, text: "Hit 80 coins to unlock your first real-life reward suggestion." },
   ];
+  const RANDOM_TASKS = [
+    "Wipe down the kitchen counters",
+    "Fold and put away a load of laundry",
+    "Take a 10-minute walk",
+    "Reply to one overdue message",
+    "Refill your water bottle",
+    "Clear off your desk",
+    "Vacuum one room",
+    "Stretch for five minutes",
+    "Take out the recycling",
+    "Put away five things",
+    "Review tomorrow's calendar",
+    "Make your bed",
+    "Tidy the bathroom sink",
+    "Sort one small pile of papers",
+    "Prep one healthy snack",
+    "Water the plants",
+    "Empty the dishwasher",
+    "Do a quick budget check",
+  ];
 
   const defaultState = {
     tasks: [
@@ -90,6 +110,17 @@
   function addTask(title) {
     state.tasks.unshift({ id: crypto.randomUUID(), title });
     persist();
+  }
+
+  function addRandomTask() {
+    const existingTitles = new Set(state.tasks.map((task) => task.title.toLowerCase()));
+    const availableTasks = RANDOM_TASKS.filter((title) => !existingTitles.has(title.toLowerCase()));
+    const taskTitle = availableTasks.length > 0
+      ? availableTasks[randomIndex(availableTasks.length)]
+      : RANDOM_TASKS[randomIndex(RANDOM_TASKS.length)];
+
+    addTask(taskTitle);
+    return taskTitle;
   }
 
   function deleteTask(taskId) {
@@ -452,6 +483,7 @@
   window.JackpotApp = {
     REEL_SYMBOLS,
     addTask,
+    addRandomTask,
     addWishlist,
     buildOutcomeCombos,
     buildGroupedOutcomeCombos,

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jackpot Chores | Tasks</title>
-    <link rel="stylesheet" href="./styles.css?v=20260901" />
+    <link rel="stylesheet" href="./styles.css?v=20260902" />
   </head>
   <body data-page="tasks">
     <div class="site-lights" aria-hidden="true">
@@ -76,6 +76,13 @@
             <button type="submit">Add Task</button>
           </form>
 
+          <div class="task-randomizer">
+            <p class="task-randomizer-copy">No idea what to add? Let the casino floor deal you a random task.</p>
+            <button id="randomTaskButton" class="secondary-action random-task-button" type="button">
+              Deal Me A Random Task
+            </button>
+          </div>
+
           <ul id="taskList" class="card-list" aria-live="polite"></ul>
         </section>
       </section>
@@ -109,7 +116,7 @@
       </li>
     </template>
 
-    <script src="./app.js?v=20260901"></script>
-    <script src="./tasks.js?v=20260901"></script>
+    <script src="./app.js?v=20260902"></script>
+    <script src="./tasks.js?v=20260902"></script>
   </body>
 </html>

@@ -1,5 +1,6 @@
 const {
   addTask,
+  addRandomTask,
   completeTask,
   deleteTask,
   getState,
@@ -10,6 +11,7 @@ const taskForm = document.getElementById("taskForm");
 const taskInput = document.getElementById("taskInput");
 const taskList = document.getElementById("taskList");
 const taskItemTemplate = document.getElementById("taskItemTemplate");
+const randomTaskButton = document.getElementById("randomTaskButton");
 const rewardModal = document.getElementById("rewardModal");
 const useSpinsNowButton = document.getElementById("useSpinsNowButton");
 const collectLaterButton = document.getElementById("collectLaterButton");
@@ -25,6 +27,12 @@ taskForm.addEventListener("submit", (event) => {
 
   addTask(title);
   taskInput.value = "";
+  renderPage();
+});
+
+randomTaskButton.addEventListener("click", () => {
+  const taskTitle = addRandomTask();
+  taskInput.value = taskTitle;
   renderPage();
 });
 
