@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jackpot Chores | Tasks</title>
+    <link rel="stylesheet" href="./styles.css?v=20260915motion" />
+  </head>
+  <body data-page="tasks">
+    <div class="site-lights" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="casino-backdrop" aria-hidden="true">
+      <div class="backdrop-wheel"></div>
+      <div class="backdrop-machine left"></div>
+      <div class="backdrop-machine right"></div>
+      <div class="backdrop-slot slot-one"></div>
+      <div class="backdrop-slot slot-two"></div>
+      <div class="backdrop-slot slot-three"></div>
+      <div class="backdrop-cardtable table-one"></div>
+      <div class="backdrop-cardtable table-two"></div>
+      <div class="backdrop-craps"></div>
+      <div class="backdrop-blackjack"></div>
+      <div class="backdrop-pokerchips"></div>
+      <div class="backdrop-person person-one"></div>
+      <div class="backdrop-person person-two"></div>
+      <div class="backdrop-person person-three"></div>
+      <div class="backdrop-sign"></div>
+      <div class="casino-floor"></div>
+      <div class="backdrop-cards"></div>
+      <div class="backdrop-coins"></div>
+    </div>
+
+    <main class="page-shell">
+      <header class="site-header">
+        <div>
+          <p class="eyebrow">Casino Productivity Club</p>
+          <h1>Jackpot Chores</h1>
+        </div>
+        <nav class="top-nav" aria-label="Primary">
+          <a class="nav-link" href="./spin.html">Spin Lounge</a>
+          <a class="nav-link" href="./spending.html">Prize Vault</a>
+          <a class="nav-link active" href="./index.html">Tasks</a>
+        </nav>
+      </header>
+
+      <section class="hero-banner hero-tasks">
+        <div>
+          <p class="eyebrow">Main Floor</p>
+          <h2>Build momentum, cash in chores, and chase the next reward run.</h2>
+        </div>
+        <div class="hero-stats" id="sharedStats"></div>
+      </section>
+
+      <section class="daily-return-card" aria-labelledby="dailyReturnTitle">
+        <div class="daily-return-copy">
+          <span class="panel-kicker">Daily Jackpot</span>
+          <h3 id="dailyReturnTitle">Keep your streak alive</h3>
+          <p id="dailyReturnDetail">Check in once a day to earn bonus spins and build toward a 7-day reward.</p>
+        </div>
+        <div class="daily-return-progress" aria-live="polite">
+          <div class="daily-return-numbers">
+            <strong><span id="dailyStreakCount">0</span> day streak</strong>
+            <span id="dailyMilestoneCopy">Next milestone: 3 days</span>
+          </div>
+          <div class="progress-track"><span id="dailyMilestoneProgress"></span></div>
+          <div id="milestoneLadder" class="milestone-ladder" aria-label="Streak milestone goals"></div>
+        </div>
+        <button id="dailyCheckInButton" class="cash-button" type="button">Claim Bonus Spin</button>
+      </section>
+
+      <section class="page-grid single-focus">
+        <section class="panel feature-panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">To-Do Table</p>
+              <h3>Daily Task Board</h3>
+            </div>
+            <span class="panel-badge">1 task = 3 spins</span>
+          </div>
+
+          <form id="taskForm" class="stack-form">
+            <input
+              id="taskInput"
+              name="task"
+              type="text"
+              maxlength="90"
+              placeholder="Add a chore, errand, or event..."
+              autocomplete="off"
+              required
+            />
+            <button type="submit">Add Task</button>
+          </form>
+
+          <div class="task-randomizer">
+            <p class="task-randomizer-copy">No idea what to add? Let the casino floor deal you a random task.</p>
+            <button id="randomTaskButton" class="secondary-action random-task-button" type="button">
+              Deal Me A Random Task
+            </button>
+          </div>
+
+          <ul id="taskList" class="card-list" aria-live="polite"></ul>
+        </section>
+      </section>
+    </main>
+
+    <div id="rewardModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="rewardTitle">
+      <div class="modal-card">
+        <p class="panel-kicker">Task Complete</p>
+        <h2 id="rewardTitle">You just earned 3 spins</h2>
+        <p>
+          Want to use those spins right now in the Spin Lounge, or bank them for
+          a later streak?
+        </p>
+        <div class="modal-actions">
+          <button id="useSpinsNowButton" class="primary-action" type="button">Use 3 Spins Now</button>
+          <button id="collectLaterButton" class="secondary-action" type="button">Collect For Later</button>
+        </div>
+      </div>
+    </div>
+
+    <template id="taskItemTemplate">
+      <li class="card-item">
+        <div class="card-copy">
+          <span class="card-title"></span>
+          <span class="card-subtitle">Reward: 3 spins</span>
+        </div>
+        <div class="card-actions">
+          <button class="cash-button" type="button">Cash In</button>
+          <button class="delete-button" type="button" aria-label="Delete task">X</button>
+        </div>
+      </li>
+    </template>
+
+    <script src="./app.js?v=20260915milestones"></script>
+    <script src="./tasks.js?v=20260915milestones"></script>
+  </body>
+</html>
