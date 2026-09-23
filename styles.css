@@ -1418,6 +1418,68 @@ input:focus-visible,
 .reel-window .reel-token.star,
 .reel-window .reel-token.cash { font-size: 1.55rem; }
 
+.jackpot-celebration {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(10, 5, 16, 0.62);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.jackpot-celebration.hidden { display: none; }
+
+.celebration-card {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  width: min(480px, 100%);
+  overflow: hidden;
+  padding: 2.5rem 2rem;
+  border: 3px solid #ffe978;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,0.3), transparent 35%),
+    linear-gradient(145deg, rgba(111, 16, 45, 0.96), rgba(19, 22, 63, 0.96));
+  box-shadow: 0 0 30px rgba(255,216,78,0.72), 0 24px 70px rgba(0,0,0,0.5);
+  animation: jackpotPop 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.celebration-card strong {
+  position: relative;
+  z-index: 1;
+  color: #fff4a8;
+  font-family: var(--display-font);
+  font-size: clamp(3rem, 10vw, 5.2rem);
+  line-height: 0.95;
+  text-shadow: 0 4px 0 #a84d0a, 0 0 24px rgba(255,255,255,0.8);
+  animation: jackpotPulse 620ms ease-in-out infinite alternate;
+}
+
+.celebration-card > span:not(.panel-kicker) {
+  position: relative;
+  z-index: 1;
+  color: #fff8e0;
+  font-size: 1.1rem;
+}
+
+.celebration-confetti { position: absolute; inset: 0; pointer-events: none; }
+
+.celebration-confetti i {
+  position: absolute;
+  top: -12%;
+  left: calc(4% + (var(--i) * 3.45%));
+  width: 9px;
+  height: 22px;
+  background: hsl(calc(var(--i) * 47), 95%, 65%);
+  transform: rotate(calc(var(--i) * 31deg));
+  animation: confettiFall 1.6s ease-in calc(var(--i) * 24ms) both;
+}
+
 .reel-previous,
 .reel-next {
   opacity: 0.34;
@@ -1432,7 +1494,9 @@ input:focus-visible,
 
 .reel.spinning {
   animation: reelGlow 620ms ease-in-out infinite;
-  transform: translateY(-2px) scale(1.015);
+  transform: translateY(-4px) scale(1.035) rotateX(3deg);
+  filter: brightness(1.08) saturate(1.18);
+  box-shadow: inset 0 0 30px rgba(255,255,255,0.6), 0 0 28px rgba(255,216,78,0.35);
 }
 
 .reel.settling {
@@ -1690,6 +1754,22 @@ body[data-page="spending"] .single-focus {
   0% { transform: translateY(-7px) scale(1.02); }
   65% { transform: translateY(2px) scale(0.99); }
   100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes jackpotPop {
+  from { opacity: 0; transform: scale(0.72) rotate(-3deg); }
+  to { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes jackpotPulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+
+@keyframes confettiFall {
+  0% { opacity: 0; transform: translateY(0) rotate(0deg); }
+  12% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(420px) rotate(640deg); }
 }
 
 @keyframes reelSettle {

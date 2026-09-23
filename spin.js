@@ -20,8 +20,13 @@ const reels = Array.from(document.querySelectorAll(".reel"));
 const allOutcomesList = document.getElementById("allOutcomesList");
 const outcomeCount = document.getElementById("outcomeCount");
 const outcomeItemTemplate = document.getElementById("outcomeItemTemplate");
+const jackpotCelebration = document.getElementById("jackpotCelebration");
+const celebrationConfetti = document.getElementById("celebrationConfetti");
+const celebrationCopy = document.getElementById("celebrationCopy");
 
 let spinning = false;
+let audioContext = null;
+let celebrationTimer = null;
 
 setInitialReels();
 renderPage();
@@ -50,6 +55,7 @@ async function playSpin() {
   }
 
   spinning = true;
+  startSpinSound();
   renderPage();
   slotMessage.textContent = "Reels spinning... let the chore jackpot hit.";
   reels.forEach((reel) => {
@@ -63,6 +69,10 @@ async function playSpin() {
       reels.map((reel, index) => spinSingleReel(reel, outcome.result[index], index)),
     );
     slotMessage.textContent = `${outcome.result.map((symbol) => symbol.label).join(" • ")}. You won ${outcome.winnings} coins.`;
+    playWinSound(outcome.winnings);
+    if (outcome.winnings >= 180) {
+      showJackpotCelebration(outcome.winnings);
+    }
   }
 
   reels.forEach((reel) => {
@@ -98,18 +108,70 @@ function renderOutcomes() {
 }
 
 async function spinSingleReel(reel, finalSymbol, reelIndex) {
-  await wait(reelIndex * 130);
+  await wait(reelIndex * 180);
 
-  const steps = 9 + reelIndex * 3;
+  const steps = 18 + reelIndex * 5;
   for (let step = 0; step < steps; step += 1) {
     renderReelWindow(reel, randomIndex(REEL_SYMBOLS.length));
+    playReelTick(reelIndex, step);
     const slowFactor = step / Math.max(steps - 1, 1);
-    await wait(55 + Math.round(110 * slowFactor * slowFactor) + reelIndex * 8);
+    await wait(42 + Math.round(150 * slowFactor * slowFactor) + reelIndex * 12);
   }
 
   reel.classList.add("settling");
   renderReelWindow(reel, REEL_SYMBOLS.indexOf(finalSymbol));
   await wait(260);
+}
+
+function getAudioContext() {
+  if (!audioContext) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return null;
+    audioContext = new AudioContextClass();
+  }
+  if (audioContext.state === "suspended") {
+    audioContext.resume().catch(() => {});
+  }
+  return audioContext;
+}
+
+function playTone(frequency, duration, type = "sine", volume = 0.035, delay = 0) {
+  const context = getAudioContext();
+  if (!context) return;
+  const start = context.currentTime + delay;
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, start);
+  gain.gain.setValueAtTime(0.0001, start);
+  gain.gain.exponentialRampToValueAtTime(volume, start + 0.012);
+  gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+  oscillator.connect(gain).connect(context.destination);
+  oscillator.start(start);
+  oscillator.stop(start + duration + 0.02);
+}
+
+function startSpinSound() {
+  playTone(92, 0.45, "sawtooth", 0.025);
+  playTone(138, 0.35, "triangle", 0.018, 0.08);
+}
+
+function playReelTick(reelIndex, step) {
+  if (step % 2 !== 0) return;
+  playTone(250 + reelIndex * 45, 0.045, "square", 0.012);
+}
+
+function playWinSound(winnings) {
+  const notes = winnings >= 180 ? [523, 659, 784, 1047] : winnings >= 45 ? [440, 554, 659] : [330, 392];
+  notes.forEach((note, index) => playTone(note, 0.22, "sine", winnings >= 180 ? 0.055 : 0.035, index * 0.11));
+}
+
+function showJackpotCelebration(winnings) {
+  window.clearTimeout(celebrationTimer);
+  celebrationCopy.textContent = `${winnings} coins are yours.`;
+  celebrationConfetti.innerHTML = Array.from({ length: 28 }, (_, index) => `<i style="--i:${index}"></i>`).join("");
+  jackpotCelebration.classList.remove("hidden");
+  celebrationTimer = window.setTimeout(() => jackpotCelebration.classList.add("hidden"), 3200);
 }
 
 function renderReelWindow(reel, centerIndex) {

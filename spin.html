@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jackpot Chores | Spin Lounge</title>
-    <link rel="stylesheet" href="./styles.css?v=20260922weekly" />
+    <link rel="stylesheet" href="./styles.css?v=20260922jackpot" />
   </head>
   <body data-page="spin">
     <div class="site-lights" aria-hidden="true">
@@ -133,6 +133,15 @@
       </section>
     </main>
 
+    <div id="jackpotCelebration" class="jackpot-celebration hidden" role="status" aria-live="assertive">
+      <div class="celebration-card">
+        <div id="celebrationConfetti" class="celebration-confetti" aria-hidden="true"></div>
+        <span class="panel-kicker">Jackpot Hit</span>
+        <strong>BIG WIN!</strong>
+        <span id="celebrationCopy">180 coins are yours.</span>
+      </div>
+    </div>
+
     <template id="outcomeItemTemplate">
       <div class="outcome-item">
         <div class="outcome-copy">
@@ -146,7 +155,7 @@
       </div>
     </template>
 
-    <script src="./app.js?v=20260922weekly"></script>
-    <script src="./spin.js?v=20260915reels"></script>
+    <script src="./app.js?v=20260922jackpot"></script>
+    <script src="./spin.js?v=20260922jackpot"></script>
   </body>
 </html>
