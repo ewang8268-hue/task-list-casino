@@ -133,7 +133,7 @@ function renderWeeklyProgress() {
     <article class="weekly-goal ${goal.complete ? "complete" : ""}">
       <div class="weekly-goal-header">
         <strong>${goal.label}</strong>
-        <span>${goal.complete ? "Complete" : `${goal.current} / ${goal.target}${goal.suffix}`}</span>
+        <span>${goal.complete ? `Complete · +${goal.reward} spins` : `${goal.current} / ${goal.target}${goal.suffix} · +${goal.reward} spins`}</span>
       </div>
       <div class="weekly-goal-track"><span style="width: ${goal.percent}%"></span></div>
     </article>

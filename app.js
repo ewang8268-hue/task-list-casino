@@ -44,6 +44,11 @@
     { id: "week-streak", icon: "🔥", title: "7-day streak", detail: "Check in for seven days." },
     { id: "reward-collector", icon: "🏆", title: "10 rewards claimed", detail: "Claim ten wishlist rewards." },
   ];
+  const WEEKLY_GOALS = [
+    { id: "weekly-tasks", label: "Tasks completed", target: 10, suffix: " tasks", reward: 5 },
+    { id: "weekly-coins", label: "Coins earned", target: 250, suffix: " coins", reward: 5 },
+    { id: "weekly-streak", label: "Streak progress", target: 7, suffix: " days", reward: 7 },
+  ];
 
   const defaultState = {
     tasks: [
@@ -66,6 +71,7 @@
       tasksCompleted: 0,
       coinsEarned: 0,
     },
+    weeklyRewardsClaimed: [],
     budgetCheckIn: {
       lastDate: null,
       streak: 0,
@@ -114,6 +120,7 @@
           tasksCompleted: Number.isFinite(parsed.weeklyStats?.tasksCompleted) ? parsed.weeklyStats.tasksCompleted : 0,
           coinsEarned: Number.isFinite(parsed.weeklyStats?.coinsEarned) ? parsed.weeklyStats.coinsEarned : 0,
         },
+        weeklyRewardsClaimed: Array.isArray(parsed.weeklyRewardsClaimed) ? parsed.weeklyRewardsClaimed : [],
         budgetCheckIn: {
           lastDate: typeof parsed.budgetCheckIn?.lastDate === "string" ? parsed.budgetCheckIn.lastDate : null,
           streak: Number.isFinite(parsed.budgetCheckIn?.streak) ? parsed.budgetCheckIn.streak : 0,
@@ -163,6 +170,7 @@
     state.spinBank += 3;
     const weekly = getWeeklyStats();
     weekly.tasksCompleted += 1;
+    grantCompletedWeeklyRewards();
     persist();
   }
 
@@ -211,6 +219,7 @@
       state.spinBank += milestoneReward;
       state.budgetCheckIn.claimedMilestones.push(state.budgetCheckIn.streak);
     }
+    grantCompletedWeeklyRewards();
     persist();
     return getBudgetCheckInStatus();
   }
@@ -249,6 +258,7 @@
     state.totalCoinsEarned += winnings;
     const weekly = getWeeklyStats();
     weekly.coinsEarned += winnings;
+    grantCompletedWeeklyRewards();
     persist();
     return { result, winnings };
   }
@@ -334,16 +344,39 @@
 
   function getWeeklyProgress() {
     const weekly = getWeeklyStats();
-    const goals = [
-      { id: "weekly-tasks", label: "Tasks completed", current: weekly.tasksCompleted, target: 10, suffix: " tasks" },
-      { id: "weekly-coins", label: "Coins earned", current: weekly.coinsEarned, target: 250, suffix: " coins" },
-      { id: "weekly-streak", label: "Streak progress", current: Math.min(state.budgetCheckIn?.streak || 0, 7), target: 7, suffix: " days" },
-    ];
-    return goals.map((goal) => ({
+    const claimedBefore = state.weeklyRewardsClaimed.length;
+    grantCompletedWeeklyRewards();
+    if (state.weeklyRewardsClaimed.length !== claimedBefore) {
+      persist();
+    }
+    const currentValues = {
+      "weekly-tasks": weekly.tasksCompleted,
+      "weekly-coins": weekly.coinsEarned,
+      "weekly-streak": Math.min(state.budgetCheckIn?.streak || 0, 7),
+    };
+    return WEEKLY_GOALS.map((goal) => ({
       ...goal,
-      percent: Math.min(100, Math.round((goal.current / goal.target) * 100)),
-      complete: goal.current >= goal.target,
+      current: currentValues[goal.id],
+      percent: Math.min(100, Math.round((currentValues[goal.id] / goal.target) * 100)),
+      complete: currentValues[goal.id] >= goal.target,
+      rewardClaimed: state.weeklyRewardsClaimed.includes(`${weekly.weekKey}:${goal.id}`),
     }));
+  }
+
+  function grantCompletedWeeklyRewards() {
+    const weekly = getWeeklyStats();
+    for (const goal of WEEKLY_GOALS) {
+      const current = goal.id === "weekly-tasks"
+        ? weekly.tasksCompleted
+        : goal.id === "weekly-coins"
+          ? weekly.coinsEarned
+          : Math.min(state.budgetCheckIn?.streak || 0, 7);
+      const rewardKey = `${weekly.weekKey}:${goal.id}`;
+      if (current >= goal.target && !state.weeklyRewardsClaimed.includes(rewardKey)) {
+        state.spinBank += goal.reward;
+        state.weeklyRewardsClaimed.push(rewardKey);
+      }
+    }
   }
 
   function getBudgetCheckInStatus() {
