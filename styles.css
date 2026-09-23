@@ -1335,6 +1335,22 @@ input:focus-visible,
   font-size: 1.08rem;
 }
 
+.sound-button {
+  margin-left: auto;
+  padding: 0.42rem 0.7rem;
+  border: 1px solid rgba(255, 234, 164, 0.34);
+  border-radius: 999px;
+  color: #fff2ba;
+  background: rgba(8, 10, 18, 0.42);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+  font-family: var(--ui-font);
+  font-size: 0.72rem;
+}
+
+.sound-button:hover {
+  background: rgba(255, 216, 78, 0.2);
+}
+
 .reel-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

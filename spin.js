@@ -23,6 +23,7 @@ const outcomeItemTemplate = document.getElementById("outcomeItemTemplate");
 const jackpotCelebration = document.getElementById("jackpotCelebration");
 const celebrationConfetti = document.getElementById("celebrationConfetti");
 const celebrationCopy = document.getElementById("celebrationCopy");
+const soundButton = document.getElementById("soundButton");
 
 let spinning = false;
 let audioContext = null;
@@ -38,6 +39,14 @@ spinButton.addEventListener("click", async () => {
     return;
   }
   await playSpin();
+});
+
+soundButton.addEventListener("click", () => {
+  getAudioContext();
+  playTone(440, 0.18, "sine", 0.07);
+  playTone(660, 0.22, "sine", 0.07, 0.12);
+  soundButton.textContent = "🔊 Sound Working";
+  window.setTimeout(() => { soundButton.textContent = "🔊 Test Sound"; }, 1200);
 });
 
 function renderPage() {
@@ -135,7 +144,7 @@ function getAudioContext() {
   return audioContext;
 }
 
-function playTone(frequency, duration, type = "sine", volume = 0.035, delay = 0) {
+function playTone(frequency, duration, type = "sine", volume = 0.055, delay = 0) {
   const context = getAudioContext();
   if (!context) return;
   const start = context.currentTime + delay;
@@ -152,18 +161,18 @@ function playTone(frequency, duration, type = "sine", volume = 0.035, delay = 0)
 }
 
 function startSpinSound() {
-  playTone(92, 0.45, "sawtooth", 0.025);
-  playTone(138, 0.35, "triangle", 0.018, 0.08);
+  playTone(92, 0.45, "sawtooth", 0.045);
+  playTone(138, 0.35, "triangle", 0.035, 0.08);
 }
 
 function playReelTick(reelIndex, step) {
   if (step % 2 !== 0) return;
-  playTone(250 + reelIndex * 45, 0.045, "square", 0.012);
+  playTone(250 + reelIndex * 45, 0.045, "square", 0.028);
 }
 
 function playWinSound(winnings) {
   const notes = winnings >= 180 ? [523, 659, 784, 1047] : winnings >= 45 ? [440, 554, 659] : [330, 392];
-  notes.forEach((note, index) => playTone(note, 0.22, "sine", winnings >= 180 ? 0.055 : 0.035, index * 0.11));
+  notes.forEach((note, index) => playTone(note, 0.22, "sine", winnings >= 180 ? 0.085 : 0.055, index * 0.11));
 }
 
 function showJackpotCelebration(winnings) {
