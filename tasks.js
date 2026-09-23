@@ -7,6 +7,7 @@ const {
   getBudgetCheckInStatus,
   getAchievements,
   getState,
+  getWeeklyProgress,
   renderSharedStats,
 } = window.JackpotApp;
 
@@ -26,6 +27,7 @@ const milestoneLadder = document.getElementById("milestoneLadder");
 const dailyCheckInButton = document.getElementById("dailyCheckInButton");
 const achievementList = document.getElementById("achievementList");
 const achievementCount = document.getElementById("achievementCount");
+const weeklyProgressList = document.getElementById("weeklyProgressList");
 
 renderPage();
 
@@ -77,6 +79,7 @@ function renderPage() {
   renderSharedStats();
   renderDailyReturnCard();
   renderAchievements();
+  renderWeeklyProgress();
   renderTasks();
 }
 
@@ -123,6 +126,18 @@ function renderDailyReturnCard() {
 function milestoneRewardFor(milestone) {
   const rewards = { 3: 2, 5: 2, 7: 3, 9: 3, 11: 4, 14: 5, 21: 7 };
   return rewards[milestone] || 2;
+}
+
+function renderWeeklyProgress() {
+  weeklyProgressList.innerHTML = getWeeklyProgress().map((goal) => `
+    <article class="weekly-goal ${goal.complete ? "complete" : ""}">
+      <div class="weekly-goal-header">
+        <strong>${goal.label}</strong>
+        <span>${goal.complete ? "Complete" : `${goal.current} / ${goal.target}${goal.suffix}`}</span>
+      </div>
+      <div class="weekly-goal-track"><span style="width: ${goal.percent}%"></span></div>
+    </article>
+  `).join("");
 }
 
 function renderTasks() {

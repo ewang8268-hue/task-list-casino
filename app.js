@@ -61,6 +61,11 @@
     totalCoinsEarned: 0,
     maxStreak: 0,
     rewardsClaimed: 0,
+    weeklyStats: {
+      weekKey: getWeekKey(new Date()),
+      tasksCompleted: 0,
+      coinsEarned: 0,
+    },
     budgetCheckIn: {
       lastDate: null,
       streak: 0,
@@ -104,6 +109,11 @@
         totalCoinsEarned: Number.isFinite(parsed.totalCoinsEarned) ? parsed.totalCoinsEarned : parsed.coinBalance || 0,
         maxStreak: Number.isFinite(parsed.maxStreak) ? parsed.maxStreak : parsed.budgetCheckIn?.streak || 0,
         rewardsClaimed: Number.isFinite(parsed.rewardsClaimed) ? parsed.rewardsClaimed : 0,
+        weeklyStats: {
+          weekKey: typeof parsed.weeklyStats?.weekKey === "string" ? parsed.weeklyStats.weekKey : getWeekKey(new Date()),
+          tasksCompleted: Number.isFinite(parsed.weeklyStats?.tasksCompleted) ? parsed.weeklyStats.tasksCompleted : 0,
+          coinsEarned: Number.isFinite(parsed.weeklyStats?.coinsEarned) ? parsed.weeklyStats.coinsEarned : 0,
+        },
         budgetCheckIn: {
           lastDate: typeof parsed.budgetCheckIn?.lastDate === "string" ? parsed.budgetCheckIn.lastDate : null,
           streak: Number.isFinite(parsed.budgetCheckIn?.streak) ? parsed.budgetCheckIn.streak : 0,
@@ -151,6 +161,8 @@
     state.tasks = state.tasks.filter((task) => task.id !== taskId);
     state.clearedTasks += 1;
     state.spinBank += 3;
+    const weekly = getWeeklyStats();
+    weekly.tasksCompleted += 1;
     persist();
   }
 
@@ -235,6 +247,8 @@
     const winnings = calculateWinnings(result);
     state.coinBalance += winnings;
     state.totalCoinsEarned += winnings;
+    const weekly = getWeeklyStats();
+    weekly.coinsEarned += winnings;
     persist();
     return { result, winnings };
   }
@@ -307,6 +321,28 @@
       ...achievement,
       ...progress[achievement.id],
       unlocked: progress[achievement.id].current >= progress[achievement.id].target,
+    }));
+  }
+
+  function getWeeklyStats() {
+    const currentWeek = getWeekKey(new Date());
+    if (!state.weeklyStats || state.weeklyStats.weekKey !== currentWeek) {
+      state.weeklyStats = { weekKey: currentWeek, tasksCompleted: 0, coinsEarned: 0 };
+    }
+    return state.weeklyStats;
+  }
+
+  function getWeeklyProgress() {
+    const weekly = getWeeklyStats();
+    const goals = [
+      { id: "weekly-tasks", label: "Tasks completed", current: weekly.tasksCompleted, target: 10, suffix: " tasks" },
+      { id: "weekly-coins", label: "Coins earned", current: weekly.coinsEarned, target: 250, suffix: " coins" },
+      { id: "weekly-streak", label: "Streak progress", current: Math.min(state.budgetCheckIn?.streak || 0, 7), target: 7, suffix: " days" },
+    ];
+    return goals.map((goal) => ({
+      ...goal,
+      percent: Math.min(100, Math.round((goal.current / goal.target) * 100)),
+      complete: goal.current >= goal.target,
     }));
   }
 
@@ -526,6 +562,14 @@
     return createDateKey(new Date());
   }
 
+  function getWeekKey(date) {
+    const weekStart = new Date(date);
+    const day = weekStart.getDay();
+    const daysFromMonday = (day + 6) % 7;
+    weekStart.setDate(weekStart.getDate() - daysFromMonday);
+    return createDateKey(weekStart);
+  }
+
   function createDateKey(date) {
     const year = date.getFullYear();
     const month = `${date.getMonth() + 1}`.padStart(2, "0");
@@ -579,6 +623,7 @@
     describeGroupedOutcome,
     getBudgetCheckInStatus,
     getAchievements,
+    getWeeklyProgress,
     getRewardSuggestionText,
     getState,
     getTokenDisplay,

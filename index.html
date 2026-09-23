@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jackpot Chores | Tasks</title>
-    <link rel="stylesheet" href="./styles.css?v=20260922achievements" />
+    <link rel="stylesheet" href="./styles.css?v=20260922weekly" />
   </head>
   <body data-page="tasks">
     <div class="site-lights" aria-hidden="true">
@@ -81,6 +81,17 @@
         <div id="achievementList" class="achievement-list" aria-live="polite"></div>
       </section>
 
+      <section class="weekly-progress-card" aria-labelledby="weeklyProgressTitle">
+        <div class="achievements-heading">
+          <div>
+            <span class="panel-kicker">This Week</span>
+            <h3 id="weeklyProgressTitle">Progress Dashboard</h3>
+          </div>
+          <span class="panel-badge">Fresh goals every Monday</span>
+        </div>
+        <div id="weeklyProgressList" class="weekly-progress-list" aria-live="polite"></div>
+      </section>
+
       <section class="page-grid single-focus">
         <section class="panel feature-panel">
           <div class="panel-header">
@@ -144,7 +155,7 @@
       </li>
     </template>
 
-    <script src="./app.js?v=20260922achievements"></script>
-    <script src="./tasks.js?v=20260922achievements"></script>
+    <script src="./app.js?v=20260922weekly"></script>
+    <script src="./tasks.js?v=20260922weekly"></script>
   </body>
 </html>
