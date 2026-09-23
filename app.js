@@ -49,6 +49,15 @@
     { id: "weekly-coins", label: "Coins earned", target: 250, suffix: " coins", reward: 5 },
     { id: "weekly-streak", label: "Streak progress", target: 7, suffix: " days", reward: 7 },
   ];
+  const PRIZE_IDEAS = [
+    { keywords: ["game", "gaming", "video", "console", "xbox", "playstation", "switch"], ideas: [["New game night", 120], ["Game store gift card", 180], ["Gaming accessory upgrade", 240]] },
+    { keywords: ["coffee", "cafe", "food", "restaurant", "meal", "dessert", "snack"], ideas: [["Specialty coffee run", 80], ["Favorite meal out", 180], ["Dessert tasting adventure", 120]] },
+    { keywords: ["fitness", "gym", "run", "health", "sport", "hike", "outdoor"], ideas: [["New workout class", 160], ["Outdoor adventure day", 220], ["Fitness gear upgrade", 250]] },
+    { keywords: ["music", "concert", "instrument", "sing"], ideas: [["Concert ticket fund", 300], ["Music store treat", 180], ["New album or playlist night", 70]] },
+    { keywords: ["art", "draw", "paint", "craft", "creative", "book", "reading"], ideas: [["Creative supplies restock", 150], ["Bookstore browsing trip", 120], ["Creative workshop", 240]] },
+    { keywords: ["tech", "computer", "phone", "gadget", "coding"], ideas: [["Tech accessory upgrade", 220], ["New app or software fund", 140], ["Gadget discovery budget", 280]] },
+    { keywords: ["self", "relax", "spa", "beauty", "care", "rest"], ideas: [["Self-care afternoon", 140], ["Spa or massage fund", 260], ["Cozy reset day", 90]] },
+  ];
 
   const defaultState = {
     tasks: [
@@ -72,6 +81,7 @@
       coinsEarned: 0,
     },
     weeklyRewardsClaimed: [],
+    prizeInterests: "",
     budgetCheckIn: {
       lastDate: null,
       streak: 0,
@@ -121,6 +131,7 @@
           coinsEarned: Number.isFinite(parsed.weeklyStats?.coinsEarned) ? parsed.weeklyStats.coinsEarned : 0,
         },
         weeklyRewardsClaimed: Array.isArray(parsed.weeklyRewardsClaimed) ? parsed.weeklyRewardsClaimed : [],
+        prizeInterests: typeof parsed.prizeInterests === "string" ? parsed.prizeInterests : "",
         budgetCheckIn: {
           lastDate: typeof parsed.budgetCheckIn?.lastDate === "string" ? parsed.budgetCheckIn.lastDate : null,
           streak: Number.isFinite(parsed.budgetCheckIn?.streak) ? parsed.budgetCheckIn.streak : 0,
@@ -178,6 +189,26 @@
     state.wishlist.unshift({ id: crypto.randomUUID(), title, value });
     sortWishlist();
     persist();
+  }
+
+  function setPrizeInterests(interests) {
+    state.prizeInterests = interests.trim().slice(0, 180);
+    persist();
+  }
+
+  function generatePrizeFromInterests(interests = state.prizeInterests) {
+    const normalized = interests.toLowerCase();
+    const matches = PRIZE_IDEAS.filter((category) => category.keywords.some((keyword) => normalized.includes(keyword)));
+    const category = matches.length > 0 ? matches[randomIndex(matches.length)] : PRIZE_IDEAS[randomIndex(PRIZE_IDEAS.length)];
+    const [title, value] = category.ideas[randomIndex(category.ideas.length)];
+    setPrizeInterests(interests);
+    return {
+      title,
+      value,
+      reason: interests.trim()
+        ? `Inspired by your interests: ${interests.trim()}.`
+        : "Add a few interests next time for an even more personal idea.",
+    };
   }
 
   function deleteWishlist(itemId) {
@@ -656,7 +687,9 @@
     describeGroupedOutcome,
     getBudgetCheckInStatus,
     getAchievements,
+    generatePrizeFromInterests,
     getWeeklyProgress,
+    setPrizeInterests,
     getRewardSuggestionText,
     getState,
     getTokenDisplay,

@@ -3,10 +3,12 @@ const {
   checkInBudgetReview,
   claimWishlist,
   deleteWishlist,
+  generatePrizeFromInterests,
   getBudgetCheckInStatus,
   getState,
   getWishlistHighlight,
   renderSharedStats,
+  setPrizeInterests,
 } = window.JackpotApp;
 
 const wishlistForm = document.getElementById("wishlistForm");
@@ -26,10 +28,34 @@ const claimTitle = document.getElementById("claimTitle");
 const claimCopy = document.getElementById("claimCopy");
 const confirmClaimButton = document.getElementById("confirmClaimButton");
 const cancelClaimButton = document.getElementById("cancelClaimButton");
+const prizeGeneratorForm = document.getElementById("prizeGeneratorForm");
+const prizeInterests = document.getElementById("prizeInterests");
+const generatedPrize = document.getElementById("generatedPrize");
+const generatedPrizeTitle = document.getElementById("generatedPrizeTitle");
+const generatedPrizeReason = document.getElementById("generatedPrizeReason");
+const generatedPrizeValue = document.getElementById("generatedPrizeValue");
+const saveGeneratedPrize = document.getElementById("saveGeneratedPrize");
 
 let pendingClaimId = null;
+let currentGeneratedPrize = null;
 
 renderPage();
+
+prizeInterests.value = getState().prizeInterests || "";
+
+prizeGeneratorForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  currentGeneratedPrize = generatePrizeFromInterests(prizeInterests.value);
+  renderGeneratedPrize();
+});
+
+saveGeneratedPrize.addEventListener("click", () => {
+  if (!currentGeneratedPrize) return;
+  addWishlist(currentGeneratedPrize.title, currentGeneratedPrize.value);
+  generatedPrize.classList.add("hidden");
+  currentGeneratedPrize = null;
+  renderPage();
+});
 
 budgetCheckInButton.addEventListener("click", () => {
   checkInBudgetReview();
@@ -78,6 +104,17 @@ function renderPage() {
   renderBudgetCheckIn();
   renderHighlight();
   renderWishlist();
+}
+
+function renderGeneratedPrize() {
+  if (!currentGeneratedPrize) {
+    generatedPrize.classList.add("hidden");
+    return;
+  }
+  generatedPrizeTitle.textContent = currentGeneratedPrize.title;
+  generatedPrizeReason.textContent = currentGeneratedPrize.reason;
+  generatedPrizeValue.textContent = `${currentGeneratedPrize.value} coins`;
+  generatedPrize.classList.remove("hidden");
 }
 
 function renderBudgetCheckIn() {

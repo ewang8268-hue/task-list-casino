@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jackpot Chores | Prize Vault</title>
-    <link rel="stylesheet" href="./styles.css?v=20260922weeklyrewards" />
+    <link rel="stylesheet" href="./styles.css?v=20260922prizegen" />
   </head>
   <body data-page="spending">
     <div class="site-lights" aria-hidden="true">
@@ -86,6 +86,37 @@
             </button>
           </article>
 
+          <article class="prize-generator-card">
+            <div class="prize-generator-heading">
+              <div>
+                <span class="panel-kicker">Need Inspiration?</span>
+                <h3>Random Prize Generator</h3>
+              </div>
+              <span class="panel-badge">Personalized ideas</span>
+            </div>
+            <form id="prizeGeneratorForm" class="prize-generator-form">
+              <input
+                id="prizeInterests"
+                type="text"
+                maxlength="180"
+                placeholder="Try: gaming, coffee, hiking, music..."
+                autocomplete="off"
+              />
+              <button type="submit">Generate Prize</button>
+            </form>
+            <div id="generatedPrize" class="generated-prize hidden" aria-live="polite">
+              <div>
+                <span class="stat-label">Your Suggested Prize</span>
+                <strong id="generatedPrizeTitle"></strong>
+                <p id="generatedPrizeReason"></p>
+              </div>
+              <div class="generated-prize-actions">
+                <span id="generatedPrizeValue" class="prize-value"></span>
+                <button id="saveGeneratedPrize" class="cash-button" type="button">Add To Wishlist</button>
+              </div>
+            </div>
+          </article>
+
           <form id="wishlistForm" class="stack-form stack-form-wide">
             <input
               id="wishlistName"
@@ -152,7 +183,7 @@
       </li>
     </template>
 
-    <script src="./app.js?v=20260922weeklyrewards"></script>
-    <script src="./spending.js?v=20260915"></script>
+    <script src="./app.js?v=20260922prizegen"></script>
+    <script src="./spending.js?v=20260922prizegen"></script>
   </body>
 </html>
