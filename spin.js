@@ -27,6 +27,7 @@ const soundButton = document.getElementById("soundButton");
 
 let spinning = false;
 let audioContext = null;
+let audioBus = null;
 let celebrationTimer = null;
 
 setInitialReels();
@@ -43,8 +44,11 @@ spinButton.addEventListener("click", async () => {
 
 soundButton.addEventListener("click", () => {
   getAudioContext();
-  playTone(440, 0.18, "sine", 0.07);
-  playTone(660, 0.22, "sine", 0.07, 0.12);
+  startSpinSound();
+  playReelTick(0, 0);
+  playReelTick(1, 2);
+  playReelTick(2, 4);
+  playWinSound(180);
   soundButton.textContent = "🔊 Sound Working";
   window.setTimeout(() => { soundButton.textContent = "🔊 Test Sound"; }, 1200);
 });
@@ -141,6 +145,17 @@ function getAudioContext() {
   if (audioContext.state === "suspended") {
     audioContext.resume().catch(() => {});
   }
+  if (!audioBus) {
+    const compressor = audioContext.createDynamicsCompressor();
+    compressor.threshold.value = -18;
+    compressor.knee.value = 12;
+    compressor.ratio.value = 5;
+    compressor.attack.value = 0.003;
+    compressor.release.value = 0.18;
+    audioBus = audioContext.createGain();
+    audioBus.gain.value = 1.35;
+    audioBus.connect(compressor).connect(audioContext.destination);
+  }
   return audioContext;
 }
 
@@ -155,24 +170,55 @@ function playTone(frequency, duration, type = "sine", volume = 0.055, delay = 0)
   gain.gain.setValueAtTime(0.0001, start);
   gain.gain.exponentialRampToValueAtTime(volume, start + 0.012);
   gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
-  oscillator.connect(gain).connect(context.destination);
+  oscillator.connect(gain).connect(audioBus);
   oscillator.start(start);
   oscillator.stop(start + duration + 0.02);
 }
 
+function playNoise(duration, volume = 0.08, delay = 0, filterType = "bandpass", frequency = 1200) {
+  const context = getAudioContext();
+  if (!context) return;
+  const length = Math.max(1, Math.floor(context.sampleRate * duration));
+  const buffer = context.createBuffer(1, length, context.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let index = 0; index < length; index += 1) {
+    data[index] = (Math.random() * 2 - 1) * (1 - index / length);
+  }
+  const source = context.createBufferSource();
+  const filter = context.createBiquadFilter();
+  const gain = context.createGain();
+  const start = context.currentTime + delay;
+  filter.type = filterType;
+  filter.frequency.value = frequency;
+  filter.Q.value = 1.4;
+  gain.gain.setValueAtTime(0.0001, start);
+  gain.gain.exponentialRampToValueAtTime(volume, start + 0.006);
+  gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+  source.buffer = buffer;
+  source.connect(filter).connect(gain).connect(audioBus);
+  source.start(start);
+  source.stop(start + duration + 0.02);
+}
+
 function startSpinSound() {
-  playTone(92, 0.45, "sawtooth", 0.045);
-  playTone(138, 0.35, "triangle", 0.035, 0.08);
+  playNoise(0.5, 0.12, 0, "lowpass", 520);
+  playTone(72, 0.55, "sawtooth", 0.065);
+  playTone(118, 0.42, "triangle", 0.045, 0.08);
 }
 
 function playReelTick(reelIndex, step) {
   if (step % 2 !== 0) return;
-  playTone(250 + reelIndex * 45, 0.045, "square", 0.028);
+  const delay = reelIndex * 0.02;
+  playNoise(0.035, 0.055, delay, "bandpass", 1500 + reelIndex * 160);
+  playTone(280 + reelIndex * 55, 0.055, "square", 0.04, delay);
 }
 
 function playWinSound(winnings) {
-  const notes = winnings >= 180 ? [523, 659, 784, 1047] : winnings >= 45 ? [440, 554, 659] : [330, 392];
-  notes.forEach((note, index) => playTone(note, 0.22, "sine", winnings >= 180 ? 0.085 : 0.055, index * 0.11));
+  const notes = winnings >= 180 ? [523, 659, 784, 1047, 1319] : winnings >= 45 ? [440, 554, 659] : [330, 392];
+  notes.forEach((note, index) => playTone(note, 0.24, "sine", winnings >= 180 ? 0.11 : 0.07, index * 0.11));
+  if (winnings >= 180) {
+    [0, 0.13, 0.26, 0.39].forEach((delay) => playNoise(0.06, 0.07, delay, "highpass", 2600));
+  }
 }
 
 function showJackpotCelebration(winnings) {
