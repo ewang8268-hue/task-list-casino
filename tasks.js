@@ -5,6 +5,7 @@ const {
   completeTask,
   deleteTask,
   getBudgetCheckInStatus,
+  getAchievements,
   getState,
   renderSharedStats,
 } = window.JackpotApp;
@@ -23,6 +24,8 @@ const dailyMilestoneCopy = document.getElementById("dailyMilestoneCopy");
 const dailyMilestoneProgress = document.getElementById("dailyMilestoneProgress");
 const milestoneLadder = document.getElementById("milestoneLadder");
 const dailyCheckInButton = document.getElementById("dailyCheckInButton");
+const achievementList = document.getElementById("achievementList");
+const achievementCount = document.getElementById("achievementCount");
 
 renderPage();
 
@@ -73,7 +76,27 @@ document.addEventListener("keydown", (event) => {
 function renderPage() {
   renderSharedStats();
   renderDailyReturnCard();
+  renderAchievements();
   renderTasks();
+}
+
+function renderAchievements() {
+  const achievements = getAchievements();
+  const unlocked = achievements.filter((achievement) => achievement.unlocked).length;
+  achievementCount.textContent = `${unlocked} / ${achievements.length} unlocked`;
+  achievementList.innerHTML = achievements.map((achievement) => {
+    const percent = Math.round((achievement.current / achievement.target) * 100);
+    return `
+      <article class="achievement-item ${achievement.unlocked ? "unlocked" : ""}">
+        <div class="achievement-icon" aria-hidden="true">${achievement.unlocked ? "✓" : achievement.icon}</div>
+        <div class="achievement-copy">
+          <strong>${achievement.title}</strong>
+          <span>${achievement.unlocked ? "Unlocked!" : achievement.detail}</span>
+          <div class="achievement-progress"><span style="width: ${percent}%"></span></div>
+        </div>
+      </article>
+    `;
+  }).join("");
 }
 
 function renderDailyReturnCard() {

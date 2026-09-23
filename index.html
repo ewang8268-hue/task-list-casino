@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jackpot Chores | Tasks</title>
-    <link rel="stylesheet" href="./styles.css?v=20260922glass" />
+    <link rel="stylesheet" href="./styles.css?v=20260922achievements" />
   </head>
   <body data-page="tasks">
     <div class="site-lights" aria-hidden="true">
@@ -70,6 +70,17 @@
         <button id="dailyCheckInButton" class="cash-button" type="button">Claim Bonus Spin</button>
       </section>
 
+      <section class="achievements-card" aria-labelledby="achievementsTitle">
+        <div class="achievements-heading">
+          <div>
+            <span class="panel-kicker">Hall of Fame</span>
+            <h3 id="achievementsTitle">Achievements</h3>
+          </div>
+          <span id="achievementCount" class="panel-badge">0 / 4 unlocked</span>
+        </div>
+        <div id="achievementList" class="achievement-list" aria-live="polite"></div>
+      </section>
+
       <section class="page-grid single-focus">
         <section class="panel feature-panel">
           <div class="panel-header">
@@ -133,7 +144,7 @@
       </li>
     </template>
 
-    <script src="./app.js?v=20260915milestones"></script>
-    <script src="./tasks.js?v=20260915milestones"></script>
+    <script src="./app.js?v=20260922achievements"></script>
+    <script src="./tasks.js?v=20260922achievements"></script>
   </body>
 </html>

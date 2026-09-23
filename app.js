@@ -38,6 +38,12 @@
     "Do a quick budget check",
   ];
   const STREAK_MILESTONES = [3, 5, 7, 9, 11, 14, 21, 30, 45, 60, 90, 120];
+  const ACHIEVEMENTS = [
+    { id: "first-task", icon: "🎯", title: "First task completed", detail: "Complete your first task." },
+    { id: "coin-century", icon: "💰", title: "100 coins earned", detail: "Earn 100 coins from spins." },
+    { id: "week-streak", icon: "🔥", title: "7-day streak", detail: "Check in for seven days." },
+    { id: "reward-collector", icon: "🏆", title: "10 rewards claimed", detail: "Claim ten wishlist rewards." },
+  ];
 
   const defaultState = {
     tasks: [
@@ -52,6 +58,9 @@
     spinBank: 0,
     coinBalance: 0,
     clearedTasks: 0,
+    totalCoinsEarned: 0,
+    maxStreak: 0,
+    rewardsClaimed: 0,
     budgetCheckIn: {
       lastDate: null,
       streak: 0,
@@ -92,6 +101,9 @@
         spinBank: Number.isFinite(parsed.spinBank) ? parsed.spinBank : 0,
         coinBalance: Number.isFinite(parsed.coinBalance) ? parsed.coinBalance : 0,
         clearedTasks: Number.isFinite(parsed.clearedTasks) ? parsed.clearedTasks : 0,
+        totalCoinsEarned: Number.isFinite(parsed.totalCoinsEarned) ? parsed.totalCoinsEarned : parsed.coinBalance || 0,
+        maxStreak: Number.isFinite(parsed.maxStreak) ? parsed.maxStreak : parsed.budgetCheckIn?.streak || 0,
+        rewardsClaimed: Number.isFinite(parsed.rewardsClaimed) ? parsed.rewardsClaimed : 0,
         budgetCheckIn: {
           lastDate: typeof parsed.budgetCheckIn?.lastDate === "string" ? parsed.budgetCheckIn.lastDate : null,
           streak: Number.isFinite(parsed.budgetCheckIn?.streak) ? parsed.budgetCheckIn.streak : 0,
@@ -160,6 +172,7 @@
     }
 
     state.coinBalance -= item.value;
+    state.rewardsClaimed += 1;
     state.wishlist = state.wishlist.filter((entry) => entry.id !== item.id);
     persist();
     return item;
@@ -179,6 +192,7 @@
 
     state.budgetCheckIn.lastDate = getTodayDateKey();
     state.budgetCheckIn.totalDays = (state.budgetCheckIn.totalDays || 0) + 1;
+    state.maxStreak = Math.max(state.maxStreak || 0, state.budgetCheckIn.streak);
     state.spinBank += getDailyBonus();
     const milestoneReward = getMilestoneReward(state.budgetCheckIn.streak);
     if (milestoneReward > 0 && !state.budgetCheckIn.claimedMilestones.includes(state.budgetCheckIn.streak)) {
@@ -220,6 +234,7 @@
     const result = Array.from({ length: 3 }, () => REEL_SYMBOLS[randomIndex(REEL_SYMBOLS.length)]);
     const winnings = calculateWinnings(result);
     state.coinBalance += winnings;
+    state.totalCoinsEarned += winnings;
     persist();
     return { result, winnings };
   }
@@ -278,6 +293,21 @@
       title: next.title,
       copy: `This reward costs ${next.value} coins. You are ${next.value - state.coinBalance} coins away.`,
     };
+  }
+
+  function getAchievements() {
+    const progress = {
+      "first-task": { current: Math.min(state.clearedTasks, 1), target: 1 },
+      "coin-century": { current: Math.min(state.totalCoinsEarned, 100), target: 100 },
+      "week-streak": { current: Math.min(state.maxStreak, 7), target: 7 },
+      "reward-collector": { current: Math.min(state.rewardsClaimed, 10), target: 10 },
+    };
+
+    return ACHIEVEMENTS.map((achievement) => ({
+      ...achievement,
+      ...progress[achievement.id],
+      unlocked: progress[achievement.id].current >= progress[achievement.id].target,
+    }));
   }
 
   function getBudgetCheckInStatus() {
@@ -548,6 +578,7 @@
     deleteWishlist,
     describeGroupedOutcome,
     getBudgetCheckInStatus,
+    getAchievements,
     getRewardSuggestionText,
     getState,
     getTokenDisplay,
