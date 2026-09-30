@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jackpot Chores | Tasks</title>
-    <link rel="stylesheet" href="./styles.css?v=20260922prizegen" />
+    <link rel="stylesheet" href="./styles.css?v=20260929categories" />
   </head>
   <body data-page="tasks">
     <div class="site-lights" aria-hidden="true">
@@ -112,6 +112,12 @@
               autocomplete="off"
               required
             />
+            <select id="taskCategory" name="category" aria-label="Task category">
+              <option value="chores">🧽 Chores</option>
+              <option value="school">📚 School</option>
+              <option value="fitness">💪 Fitness</option>
+              <option value="work">💼 Work</option>
+            </select>
             <button type="submit">Add Task</button>
           </form>
 
@@ -145,7 +151,7 @@
     <template id="taskItemTemplate">
       <li class="card-item">
         <div class="card-copy">
-          <span class="card-title"></span>
+          <div class="task-title-row"><span class="card-title"></span><span class="task-category"></span></div>
           <span class="card-subtitle">Reward: 3 spins</span>
         </div>
         <div class="card-actions">
@@ -155,7 +161,7 @@
       </li>
     </template>
 
-    <script src="./app.js?v=20260922prizegen"></script>
-    <script src="./tasks.js?v=20260922weeklyrewards"></script>
+    <script src="./app.js?v=20260929categories"></script>
+    <script src="./tasks.js?v=20260929categories"></script>
   </body>
 </html>

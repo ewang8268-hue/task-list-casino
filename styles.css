@@ -1040,6 +1040,22 @@ h3 {
   grid-template-columns: 1.25fr 0.7fr auto;
 }
 
+.stack-form select {
+  min-width: 150px;
+}
+
+select {
+  border-radius: 10px;
+  border: 1px solid rgba(255,244,185,0.14);
+  padding: 1rem 1.05rem;
+  background: linear-gradient(180deg, rgba(18, 14, 12, 0.58), rgba(9, 8, 8, 0.38));
+  color: var(--cream);
+  backdrop-filter: blur(10px) saturate(1.12);
+  -webkit-backdrop-filter: blur(10px) saturate(1.12);
+}
+
+select option { color: #24140e; background: #f7e4b0; }
+
 .task-randomizer {
   display: flex;
   align-items: center;
@@ -1186,7 +1202,13 @@ input:focus-visible,
 .card-item:nth-child(4) { animation-delay: 135ms; }
 
 .card-copy { display: grid; gap: 0.24rem; }
+.task-title-row { display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap; }
 .card-title { font-size: 1.04rem; }
+.task-category { padding: 0.24rem 0.55rem; border-radius: 999px; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; background: rgba(255,255,255,0.12); color: #fff3bd; }
+.category-school { background: rgba(106, 170, 255, 0.22); color: #cfe5ff; }
+.category-chores { background: rgba(255, 177, 71, 0.2); color: #ffe0a0; }
+.category-fitness { background: rgba(79, 236, 148, 0.2); color: #caffd9; }
+.category-work { background: rgba(219, 125, 255, 0.2); color: #f2d2ff; }
 .card-subtitle,
 .support-copy,
 .highlight-card p { color: var(--text-soft); line-height: 1.55; }

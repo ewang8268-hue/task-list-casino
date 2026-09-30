@@ -17,26 +17,22 @@
     { threshold: 80, text: "80 coins: Mini reward unlocked. Consider a snack, break, or tiny treat you've wanted." },
     { threshold: 0, text: "Hit 80 coins to unlock your first real-life reward suggestion." },
   ];
+  const TASK_CATEGORIES = {
+    school: { label: "School", icon: "📚" },
+    chores: { label: "Chores", icon: "🧽" },
+    fitness: { label: "Fitness", icon: "💪" },
+    work: { label: "Work", icon: "💼" },
+  };
   const RANDOM_TASKS = [
-    "Wipe down the kitchen counters",
-    "Fold and put away a load of laundry",
-    "Take a 10-minute walk",
-    "Reply to one overdue message",
-    "Refill your water bottle",
-    "Clear off your desk",
-    "Vacuum one room",
-    "Stretch for five minutes",
-    "Take out the recycling",
-    "Put away five things",
-    "Review tomorrow's calendar",
-    "Make your bed",
-    "Tidy the bathroom sink",
-    "Sort one small pile of papers",
-    "Prep one healthy snack",
-    "Water the plants",
-    "Empty the dishwasher",
-    "Do a quick budget check",
-  ];
+    ["Review tomorrow's calendar", "school"], ["Sort one small pile of papers", "school"],
+    ["Clear off your desk", "school"], ["Wipe down the kitchen counters", "chores"],
+    ["Fold and put away a load of laundry", "chores"], ["Take out the recycling", "chores"],
+    ["Make your bed", "chores"], ["Tidy the bathroom sink", "chores"],
+    ["Take a 10-minute walk", "fitness"], ["Refill your water bottle", "fitness"],
+    ["Stretch for five minutes", "fitness"], ["Prep one healthy snack", "fitness"],
+    ["Reply to one overdue message", "work"], ["Put away five things", "work"],
+    ["Water the plants", "work"], ["Empty the dishwasher", "chores"], ["Do a quick budget check", "work"],
+  ].map(([title, category]) => ({ title, category }));
   const STREAK_MILESTONES = [3, 5, 7, 9, 11, 14, 21, 30, 45, 60, 90, 120];
   const ACHIEVEMENTS = [
     { id: "first-task", icon: "🎯", title: "First task completed", detail: "Complete your first task." },
@@ -61,9 +57,9 @@
 
   const defaultState = {
     tasks: [
-      { id: crypto.randomUUID(), title: "Do the dishes" },
-      { id: crypto.randomUUID(), title: "Answer two important emails" },
-      { id: crypto.randomUUID(), title: "Take out the trash" },
+      { id: crypto.randomUUID(), title: "Do the dishes", category: "chores" },
+      { id: crypto.randomUUID(), title: "Answer two important emails", category: "work" },
+      { id: crypto.randomUUID(), title: "Take out the trash", category: "chores" },
     ],
     wishlist: [
       { id: crypto.randomUUID(), title: "Fancy coffee run", value: 80 },
@@ -117,7 +113,9 @@
     try {
       const parsed = JSON.parse(saved);
       return {
-        tasks: Array.isArray(parsed.tasks) ? parsed.tasks : structuredClone(defaultState.tasks),
+        tasks: Array.isArray(parsed.tasks)
+          ? parsed.tasks.map((task) => ({ ...task, category: TASK_CATEGORIES[task.category] ? task.category : "chores" }))
+          : structuredClone(defaultState.tasks),
         wishlist: Array.isArray(parsed.wishlist) ? parsed.wishlist : structuredClone(defaultState.wishlist),
         spinBank: Number.isFinite(parsed.spinBank) ? parsed.spinBank : 0,
         coinBalance: Number.isFinite(parsed.coinBalance) ? parsed.coinBalance : 0,
@@ -154,20 +152,20 @@
     return state;
   }
 
-  function addTask(title) {
-    state.tasks.unshift({ id: crypto.randomUUID(), title });
+  function addTask(title, category = "chores") {
+    state.tasks.unshift({ id: crypto.randomUUID(), title, category: TASK_CATEGORIES[category] ? category : "chores" });
     persist();
   }
 
-  function addRandomTask() {
+  function addRandomTask(category = "all") {
     const existingTitles = new Set(state.tasks.map((task) => task.title.toLowerCase()));
-    const availableTasks = RANDOM_TASKS.filter((title) => !existingTitles.has(title.toLowerCase()));
-    const taskTitle = availableTasks.length > 0
-      ? availableTasks[randomIndex(availableTasks.length)]
-      : RANDOM_TASKS[randomIndex(RANDOM_TASKS.length)];
+    const categoryTasks = category === "all" ? RANDOM_TASKS : RANDOM_TASKS.filter((task) => task.category === category);
+    const pool = categoryTasks.length > 0 ? categoryTasks : RANDOM_TASKS;
+    const availableTasks = pool.filter((task) => !existingTitles.has(task.title.toLowerCase()));
+    const task = availableTasks.length > 0 ? availableTasks[randomIndex(availableTasks.length)] : pool[randomIndex(pool.length)];
 
-    addTask(taskTitle);
-    return taskTitle;
+    addTask(task.title, task.category);
+    return task;
   }
 
   function deleteTask(taskId) {
@@ -673,6 +671,7 @@
 
   window.JackpotApp = {
     REEL_SYMBOLS,
+    TASK_CATEGORIES,
     addTask,
     addRandomTask,
     addWishlist,

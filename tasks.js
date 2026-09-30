@@ -13,6 +13,7 @@ const {
 
 const taskForm = document.getElementById("taskForm");
 const taskInput = document.getElementById("taskInput");
+const taskCategory = document.getElementById("taskCategory");
 const taskList = document.getElementById("taskList");
 const taskItemTemplate = document.getElementById("taskItemTemplate");
 const randomTaskButton = document.getElementById("randomTaskButton");
@@ -43,14 +44,15 @@ taskForm.addEventListener("submit", (event) => {
     return;
   }
 
-  addTask(title);
+  addTask(title, taskCategory.value);
   taskInput.value = "";
   renderPage();
 });
 
 randomTaskButton.addEventListener("click", () => {
-  const taskTitle = addRandomTask();
-  taskInput.value = taskTitle;
+  const task = addRandomTask(taskCategory.value);
+  taskInput.value = task.title;
+  taskCategory.value = task.category;
   renderPage();
 });
 
@@ -160,6 +162,9 @@ function renderTasks() {
   for (const task of state.tasks) {
     const node = taskItemTemplate.content.firstElementChild.cloneNode(true);
     node.querySelector(".card-title").textContent = task.title;
+    const category = window.JackpotApp.TASK_CATEGORIES[task.category] || window.JackpotApp.TASK_CATEGORIES.chores;
+    node.querySelector(".task-category").textContent = `${category.icon} ${category.label}`;
+    node.querySelector(".task-category").className = `task-category category-${task.category}`;
     node.querySelector(".cash-button").addEventListener("click", () => {
       completeTask(task.id);
       renderPage();
