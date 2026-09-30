@@ -116,7 +116,7 @@ body::after {
   inset: 0;
   pointer-events: none;
   overflow: hidden;
-  filter: brightness(0.58) saturate(0.78) contrast(0.94);
+  filter: brightness(0.64) saturate(0.8) contrast(0.94);
 }
 
 .casino-backdrop::before,
